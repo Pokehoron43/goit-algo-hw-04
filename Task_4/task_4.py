@@ -3,32 +3,47 @@ def parse_input(user_input):
     cmd = cmd.strip().lower()
     return cmd, *args
 
+
 def add_contact(args, contacts):
+    if len(args) != 2:
+        return "Usage: add <name> <phone>"
+
     name, phone = args
     contacts[name] = phone
     return f"Contact {name} added."
 
-def command_phone(name,contacts):
-    return contacts.get(name)
 
-def command_change(new_phone, name, contacts):
+def command_change(args, contacts):
+    if len(args) != 2:
+        return "Usage: change <name> <new_phone>"
+
+    name, new_phone = args
+
     if name in contacts:
         contacts[name] = new_phone
         return f"Contact {name} updated."
-    else:
-        return "Contact not found."
+    return "Contact not found."
+
+
+def command_phone(args, contacts):
+    if len(args) != 1:
+        return "Usage: phone <name>"
+
+    name = args[0]
+    return contacts.get(name, "Contact not found.")
+
 
 def command_all(contacts):
     if not contacts:
         return "No contacts found."
-    result = ""
-    for name, phone in contacts.items():
-        result += f"{name}: {phone}\n"
-    return result.strip()
+
+    return "\n".join(f"{name}: {phone}" for name, phone in contacts.items())
+
 
 def main():
     contacts = {}
     print("Welcome to the assistant bot!")
+
     while True:
         user_input = input("Enter a command: ")
         command, *args = parse_input(user_input)
@@ -39,25 +54,22 @@ def main():
 
         elif command == "hello":
             print("How can I help you?")
+
         elif command == "add":
             print(add_contact(args, contacts))
+
         elif command == "change":
-            if len(args) != 2:
-                print("Usage: change <name> <new_phone>")
-                continue
-            name, new_phone = args
-            print(command_change(name, new_phone, contacts))
+            print(command_change(args, contacts))
 
         elif command == "phone":
-            if len(args) != 1:
-                print("Usage: phone <name>")
-                continue
-            name = args[0]
-            print(command_phone(name, contacts))
+            print(command_phone(args, contacts))
+
         elif command == "all":
             print(command_all(contacts))
+
         else:
             print("Invalid command.")
+
 
 if __name__ == "__main__":
     main()
