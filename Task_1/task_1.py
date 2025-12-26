@@ -9,7 +9,7 @@ def total_salary(path):
                     return 0, 0
                 lines+=1
                 _,salary= line.strip().split(",")
-                total += int(salary)
+                total += float(salary)
             average=total/lines
             return total,average
             
